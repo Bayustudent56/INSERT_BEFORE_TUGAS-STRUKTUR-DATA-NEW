@@ -23,17 +23,17 @@
 
 import java.util.Scanner;
 
-class Node {
+class Node { 
     public int angkaInt;
     public double angkaDouble;
     public Node next;
     public Node previous;
 
-    public Node(int angkaInt, double angkaDouble) {
+    public Node(int angkaInt, double angkaDouble) { // Constructor
         this.angkaInt = angkaInt;
         this.angkaDouble = angkaDouble;
     }
-
+    //method untuk menampilkan list
     public void tampilNode() {
         System.out.print("{" + angkaInt + ", " + angkaDouble + "} ");
     }
@@ -42,7 +42,7 @@ class Node {
 class DoubleLink {
     private Node first;
     private Node last;
-
+    //inisialisasi first dan last awalnya kosong (null)
     public DoubleLink() {
         first = null;
         last = null;
@@ -53,13 +53,13 @@ class DoubleLink {
         return first == null;
     }
 
-    // Menyisipkan node baru di awal list
+    // menambahkan node baru di awal list
     public void insertFirst(int angkaInt, double angkaDouble) {
         Node newNode = new Node(angkaInt, angkaDouble);
         if (isEmpty())
-            last = newNode; // Jika list kosong, set last sebagai newNode
+            last = newNode; // Jika list kosong, atur last sebagai newNode
         else
-            first.previous = newNode; // Jika tidak, set previous first ke newNode
+            first.previous = newNode; // Jika tidak, atur previous node pertama ke node baru
         newNode.next = first; // Set next newNode ke first
         first = newNode; // Set first ke newNode
     }
@@ -164,12 +164,13 @@ class DoubleLink {
 
     // Mengurutkan list berdasarkan angkaInt secara ascending atau descending
     public void sortByInt(boolean ascending) {
-        if (first == null) return;
+        if (first == null) return; // Jika list kosong, tidak perlu mengurutkan
 
-        for (Node i = first; i != null; i = i.next) {
+        for (Node i = first; i != null; i = i.next) { 
             for (Node j = i.next; j != null; j = j.next) {
-                if ((ascending && i.angkaInt > j.angkaInt) || (!ascending && i.angkaInt < j.angkaInt)) {
-                    int tempInt = i.angkaInt;
+                if ((ascending && i.angkaInt > j.angkaInt) || (!ascending && i.angkaInt < j.angkaInt)) { //jika ascending true, urutkan dari kecil ke besar, jika false urutkan dari besar ke kecil
+                    // Tukar nilai angkaInt dan angkaDouble antara node i dan j
+                    int tempInt = i.angkaInt; 
                     double tempDouble = i.angkaDouble;
                     i.angkaInt = j.angkaInt;
                     i.angkaDouble = j.angkaDouble;
@@ -182,11 +183,12 @@ class DoubleLink {
 
     // Mengurutkan list berdasarkan angkaDouble secara ascending atau descending
     public void sortByDouble(boolean ascending) {
-        if (first == null) return;
+        if (first == null) return; // Jika list kosong, tidak perlu mengurutkan
 
         for (Node i = first; i != null; i = i.next) {
             for (Node j = i.next; j != null; j = j.next) {
-                if ((ascending && i.angkaDouble > j.angkaDouble) || (!ascending && i.angkaDouble < j.angkaDouble)) {
+                if ((ascending && i.angkaDouble > j.angkaDouble) || (!ascending && i.angkaDouble < j.angkaDouble)) { //jika ascending true, urutkan dari kecil ke besar, jika false urutkan dari besar ke kecil
+                    // Tukar nilai angkaInt dan angkaDouble antara node i dan j
                     int tempInt = i.angkaInt;
                     double tempDouble = i.angkaDouble;
                     i.angkaInt = j.angkaInt;
@@ -197,6 +199,66 @@ class DoubleLink {
             }
         }
     }
+    // Mengonversi list ke array
+private Node[] toArray() {
+    int count = 0;
+    for (Node curr = first; curr != null; curr = curr.next) { // Hitung jumlah node
+        count++;
+    }
+
+    Node[] nodes = new Node[count]; // Buat array dengan ukuran jumlah node
+    int i = 0; 
+    for (Node curr = first; curr != null; curr = curr.next) { // Isi array dengan node dari list
+        nodes[i++] = curr; 
+    }
+
+    return nodes; // Kembalikan array yang berisi node
+}
+
+// Menampilkan list berdasarkan angkaInt yang diurutkan sementara
+public void tampilUrutByInt(boolean ascending) {
+    Node[] nodes = toArray(); // Konversi list ke array
+
+    for (int i = 0; i < nodes.length - 1; i++) { 
+        for (int j = i + 1; j < nodes.length; j++) {
+            if ((ascending && nodes[i].angkaInt > nodes[j].angkaInt) ||
+                (!ascending && nodes[i].angkaInt < nodes[j].angkaInt)) { //jika ascending true, urutkan dari kecil ke besar, jika false urutkan dari besar ke kecil
+                Node temp = nodes[i];
+                nodes[i] = nodes[j];
+                nodes[j] = temp;
+            }
+        }
+    }
+
+    System.out.print("List (sorted by angkaInt): ");
+    for (Node node : nodes) { // Tampilkan node yang sudah diurutkan
+        node.tampilNode();
+    }
+    System.out.println();
+}
+
+// Menampilkan list berdasarkan angkaDouble yang diurutkan sementara
+public void tampilUrutByDouble(boolean ascending) {
+    Node[] nodes = toArray();
+
+    for (int i = 0; i < nodes.length - 1; i++) {
+        for (int j = i + 1; j < nodes.length; j++) {
+            if ((ascending && nodes[i].angkaDouble > nodes[j].angkaDouble) ||
+                (!ascending && nodes[i].angkaDouble < nodes[j].angkaDouble)) {//jika ascending true, urutkan dari kecil ke besar, jika false urutkan dari besar ke kecil
+                Node temp = nodes[i];
+                nodes[i] = nodes[j];
+                nodes[j] = temp;
+            }
+        }
+    }
+
+    System.out.print("List (sorted by angkaDouble): ");
+    for (Node node : nodes) { // Tampilkan node yang sudah diurutkan
+        node.tampilNode();
+    }
+    System.out.println();
+}
+
 }
 
 public class DoubleLinkList {
@@ -274,19 +336,19 @@ public class DoubleLinkList {
                     list.tampilMundur();
                     break;
                 case 9:
-                    list.sortByInt(true);
+                    list.tampilUrutByInt(true);
                     System.out.println("Berhasil sort ascending berdasarkan angkaInt");
                     break;
                 case 10:
-                    list.sortByInt(false);
+                    list.tampilUrutByInt(false);
                     System.out.println("Berhasil sort descending berdasarkan angkaInt");
                     break;
                 case 11:
-                    list.sortByDouble(true);
+                    list.tampilUrutByDouble(true);
                     System.out.println("Berhasil sort ascending berdasarkan angkaDouble");
                     break;
                 case 12:
-                    list.sortByDouble(false);
+                    list.tampilUrutByDouble(false);
                     System.out.println("Berhasil sort descending berdasarkan angkaDouble");
                     break;
                 case 0:
